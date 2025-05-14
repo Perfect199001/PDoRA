@@ -291,14 +291,7 @@ class SwinUNETR(nn.Module):
             self._check_input_size(x_in.shape[2:])
             
         hidden_states_out = self.swinViT(x_in, self.normalize)
-        
-        #print(hidden_states_out[0].shape)                    # [2, 24, 32, 32, 32]
-        #print(hidden_states_out[1].shape)                    # [2, 48, 16, 16, 16]
-        #print(hidden_states_out[2].shape)                    # [2, 96, 8, 8, 8]
-        #print(hidden_states_out[3].shape)                    # [2, 192, 4, 4, 4]
-        #print(hidden_states_out[4].shape)                    # [2, 384, 2, 2, 2]
-        
-        
+                
         enc0 = self.encoder1(x_in)
         enc1 = self.encoder2(hidden_states_out[0])
         enc2 = self.encoder3(hidden_states_out[1])
@@ -310,15 +303,9 @@ class SwinUNETR(nn.Module):
         dec0 = self.decoder2(dec1, enc1)
         out = self.decoder1(dec0, enc0)
         logits = self.out(out)
-        
-        # 二分割（加一个softmax层）：
         logits = self.Softmax(logits)
         
         return logits
-
-
-
-
 
 def window_partition(x, window_size):   
     x_shape = x.size()
@@ -343,10 +330,6 @@ def window_partition(x, window_size):
         windows = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(-1, window_size[0] * window_size[1], c)
     return windows
 
-
-
-
-
 def window_reverse(windows, window_size, dims):   
     if len(dims) == 4:
         b, d, h, w = dims
@@ -368,8 +351,6 @@ def window_reverse(windows, window_size, dims):
         x = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(b, h, w, -1)
     return x
 
-
-
 def get_window_size(x_size, window_size, shift_size=None):    
     use_window_size = list(window_size)
     if shift_size is not None:
@@ -384,10 +365,6 @@ def get_window_size(x_size, window_size, shift_size=None):
         return tuple(use_window_size)
     else:
         return tuple(use_window_size), tuple(use_shift_size)
-
-
-
-
 
 class WindowAttention(nn.Module):
     def __init__(
@@ -481,10 +458,6 @@ class WindowAttention(nn.Module):
         x = self.proj_drop(x)
         return x
 
-
-
-
-
 class SwinTransformerBlock(nn.Module):
 
     def __init__(
@@ -525,8 +498,6 @@ class SwinTransformerBlock(nn.Module):
         self.norm2 = norm_layer(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
         
-        
-        # 微调的时候将这里换掉：
         self.mlp = Mlp(hidden_size=dim, mlp_dim=mlp_hidden_dim, act=act_layer, dropout_rate=drop, dropout_mode="swin")
 
     def forward_part1(self, x, mask_matrix):
@@ -590,7 +561,7 @@ class SwinTransformerBlock(nn.Module):
         x = x.cuda()
         x = self.mlp(self.norm2(x)).cuda()
         out = self.drop_path(x)
-        return out       # 在微调的时候将这里的self.mlp 换掉就好啦
+        return out      
 
     def load_from(self, weights, n_block, layer):
         root = f"module.{layer}.0.blocks.{n_block}."
@@ -640,7 +611,7 @@ class SwinTransformerBlock(nn.Module):
             x = x + checkpoint.checkpoint(self.forward_part2, x, use_reentrant=False)
         else:
             x = x.cuda()
-            x = x + self.forward_part2(x)              # 这一部分对应的是mlp(到时候微调也是直接应用于此)
+            x = x + self.forward_part2(x)           
             #print(x.shape)
             
         return x
@@ -751,7 +722,6 @@ def compute_mask(dims, window_size, shift_size, device):
     attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0)).masked_fill(attn_mask == 0, float(0.0))
 
     return attn_mask
-
 
 class BasicLayer(nn.Module):
 
@@ -992,8 +962,6 @@ def filter_swinunetr(key, value):
         return new_key, value
     else:
         return None
-        
-        
         
 if __name__ == "__main__":
     model = SwinUNETR(img_size=64,in_channels=1,out_channels=2).cuda()
