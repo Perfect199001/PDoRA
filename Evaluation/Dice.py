@@ -27,7 +27,7 @@ model = SwinUNETR(img_size=64,in_channels=1,out_channels=2).cuda()
  
 # 1. 这里是加载单个模型的.pth文件：
 
-load_file = '/home/ubuntu2204/yhx/SegMamba-main/checkpoint_pissa_dora/qkv_L/kits/train/bs=1/r=16/model_epoch_999.pth'
+load_file = '.../checkpoint_pissa_dora/qkv_L/kits/train/bs=1/r=16/model_epoch_last.pth'
 
 
 checkpoint = torch.load(load_file)
@@ -44,7 +44,7 @@ def nib_load(file_name):
     proxy.uncache()
     return data
 
-txt_file = '/media/ubuntu2204/Elements/kits23/dataset/test.txt'
+txt_file = '.../Elements/kits23/dataset/test.txt'
 with open(txt_file, 'r') as f:
     file_names = [line.strip() for line in f.readlines()]
 
@@ -66,9 +66,9 @@ total = 0
 
 for file_name in file_names:
     # 构造图像文件路径和目标文件路径
-    image_file = f'/media/ubuntu2204/Elements/kits23/dataset/{file_name}/final_img.nii.gz'
-    target_file = f'/media/ubuntu2204/Elements/kits23/dataset/{file_name}/final_seg.nii.gz'
-    #label_file = f'/home/ubuntu2204/yhx/multimask/fold_dataset/fold0/{file_name}/{file_name}_/class.txt'
+    image_file = f'.../Elements/kits23/dataset/{file_name}/final_img.nii.gz'
+    target_file = f'.../Elements/kits23/dataset/{file_name}/final_seg.nii.gz'
+    #label_file = f'.../dataset/{file_name}/{file_name}_/class.txt'
 
     images = np.array(nib_load(image_file), dtype='float32', order='C')
     images = np.expand_dims(images, axis=-1)
@@ -94,7 +94,7 @@ for file_name in file_names:
     output = output.argmax(0)
     
     # 确保目标目录存在
-    output_dir = f'/home/ubuntu2204/yhx/SegMamba-main/dataset/pred_PD/kits/train/bs=1/r=16/'
+    output_dir = f'.../dataset/pred_PD/kits/train/bs=1/r=16/'
     os.makedirs(output_dir, exist_ok=True)
     
     # 保存预测结果为 .nii.gz 文件
@@ -118,7 +118,7 @@ print(f"Average Dice Coefficient: {average_dice}")
 
 
 # 指定结果文件路径
-result_file = '/home/ubuntu2204/yhx/SegMamba-main/test_pissa_dora/test50/qkv_L/kits/train/bs=1/r=16/6e-5.txt'
+result_file = '.../test/kits/train/bs=1/r=16/6e-5.txt'
 
 # 打开文件以写入结果
 with open(result_file, 'w') as f:
