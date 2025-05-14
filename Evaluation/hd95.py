@@ -47,8 +47,8 @@ with open("/media/ubuntu2204/Elements/kits23/dataset/test.txt", "r") as file:
 # Iterate over the range of sub directories
 for sub in subjects:
     # Path for input files
-    mask_path = f"/media/ubuntu2204/Elements/kits23/dataset/{sub}/final_seg.nii.gz"
-    pred_path = f"/home/ubuntu2204/yhx/SegMamba-main/dataset/pred_lora/kits/train/bs=1/r=16/{sub}_prediction.nii"
+    mask_path = f".../Elements/kits23/dataset/{sub}/final_seg.nii.gz"
+    pred_path = f".../dataset/pred_lora/kits/train/bs=1/r=16/{sub}_prediction.nii"
 
     y_true_nii = nib.load(mask_path)
     y_pred_nii = nib.load(pred_path)
@@ -86,4 +86,4 @@ for sub in subjects:
 
 # Convert the results to a DataFrame and write it to an Excel file
 df_hausdorff = pd.DataFrame(hausdorff_results)
-df_hausdorff.to_excel("/home/ubuntu2204/yhx/SegMamba-main/dataset/pred_lora/kits/train/bs=1/r=16/hausdorff_distances.xlsx", index=False)
+df_hausdorff.to_excel(".../dataset/pred_lora/kits/train/bs=1/r=16/hausdorff_distances.xlsx", index=False)
