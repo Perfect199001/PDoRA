@@ -43,9 +43,9 @@ parser.add_argument('--description',
                     type=str)
 
 # DataSet Information
-parser.add_argument('--root', default='/media/ubuntu2204/Elements/kits23/dataset/', type=str)
-parser.add_argument('--train_dir', default='/media/ubuntu2204/Elements/kits23/dataset/', type=str)
-parser.add_argument('--val_dir', default='/media/ubuntu2204/Elements/kits23/dataset/', type=str)
+parser.add_argument('--root', default='.../Elements/kits23/dataset/', type=str)
+parser.add_argument('--train_dir', default='.../Elements/kits23/dataset/', type=str)
+parser.add_argument('--val_dir', default='.../Elements/kits23/dataset/', type=str)
 parser.add_argument('--mode', default='train', type=str)
 parser.add_argument('--train_file', default='train.txt', type=str)
 parser.add_argument('--val_file', default='val.txt', type=str)
@@ -201,7 +201,7 @@ def main_worker():
     np.random.seed(args.seed)
     # Example usage
     finetuner = Finetune_UNETR(
-        resume_path='/home/ubuntu2204/yhx/SegMamba-main/checkpoint_pre_CE/pre_swinunetr2024-06-04/model_epoch_last.pth',
+        resume_path='.../checkpoint_pre_CE/pre_swinunetr2024-06-04/model_epoch_last.pth',
         in_channels=1,
         out_channels=2,
         img_size=64,
@@ -236,11 +236,11 @@ def main_worker():
     criterion = getattr(criterions, args.criterion)
 
  
-    checkpoint_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'checkpoint_pissa_dora','qkv_L','kits','train','bs=1','r=16')
+    checkpoint_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'checkpoint_pdora','qkv_L','kits','train','bs=1','r=16')
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
 
-    #resume = './checkpoint/SwinUNETR2023-11-04/model_epoch_399.pth'#/home/ubuntu2204/cwg/UVSnet/checkpoint/UNETR2024-05-23/model_epoch_last.pth
+    #resume = './checkpoint/SwinUNETR2023-11-04/model_epoch_399.pth'
 
     writer = SummaryWriter()
 
